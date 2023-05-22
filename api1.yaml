@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: true
+  collections:
+    - ansible.posix
+    - community.docker
+  tasks:
+    - name: Print message
+      debug:
+        msg: Hello Ansible World
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Build a ansible controller
+      command: docker build -t bevel-build /home/varsha/POC/POC/POC/bevel-1
+
+    - name: Start Bevel Build container
+      community.docker.docker_container:
+        name: bevel-build
+        image: bevel-build
+        state: started
+        detach: true
+        command: sleep infinity
+        volumes:
+          - "/home/varsha/POC/POC/POC/bevel-1:/home/bevel/"
+    
+    - name: Execute script inside container
+      community.docker.docker_container_exec:
+        container: bevel-build
+        command: /home/bevel/script.sh
+      register: output
+    
+    - debug: var=output.stdout_lines

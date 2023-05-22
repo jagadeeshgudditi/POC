@@ -6,13 +6,15 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from ansible_runner import run 
+import os
+
 @api_view(['GET'])
 def hello_world(request):
     return Response({'message':'Helloworld'})
 
 class RunPlaybookView(APIView):
     def post(self, request):
-        playbook_path= "/home/pocvm/POC/api.yaml"
+        playbook_path= "/home/varsha/POC/POC/POC/api1.yaml"
         result = run(playbook=playbook_path)
         
         status = result.status
@@ -34,3 +36,7 @@ class RunPlaybookView(APIView):
         
         return Response(response_data)
 
+@api_view(['POST'])
+def stop_server(request):
+    os.kill(os.getpid(),9)
+    return Response("Django server stopped successfully")

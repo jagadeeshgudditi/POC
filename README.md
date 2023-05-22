@@ -1,12 +1,10 @@
 # POC
-
-
-for prerequsites for running are
-   - ansible should be installed
-     pip and python3 should be installed
-
+   
 
 Install prerequesites & dependencies 
+
+   - ansible should be installed
+     pip and python3 should be installed
 
    - pip install django djangorest-framework
      pip install ansible_runner
